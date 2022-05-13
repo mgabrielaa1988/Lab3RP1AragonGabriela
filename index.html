@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Recuperatorio 1er Parcial</title>
+</head>
+
+<script>
+
+    class Vehiculo {
+        id = 0;
+        modelo = "";
+        añoFabricacion = 0;
+        velocidadMaxima = 0;
+
+        constructor(id, modelo, año, velMax) {
+            this.id = id;
+            this.modelo = modelo;
+            this.añoFabricacion = año;
+            this.velocidadMaxima = velMax;
+        }
+
+        toString() {
+            return JSON.stringify(this);
+        }
+    }
+
+    class Aereo extends Vehiculo {
+        alturaMaxima = 0;
+        autonomia;
+
+        constructor(id, modelo, año, velMax, altMax, auto) {
+            super(id, modelo, año, velMax);
+            this.alturaMaxima = altMax;
+            this.autonomia = auto;
+        }
+
+        toString() {
+            return JSON.stringify(this);
+        }
+    }
+
+    class Terrestre extends Vehiculo {
+        cantidadPuertas = 0;
+        cantidadRuedas = 0;
+
+        constructor(id, modelo, año, velMax, cantPuer, cantRue) {
+            super(id, modelo, año, velMax);
+            this.cantidadPuertas = cantPuer;
+            this.cantidadRuedas = cantRue;
+        }
+
+        toString() {
+            return JSON.stringify(this);
+        }
+    }
+
+    function LeerJSON() {
+        let cadenaDatos = '[{"id":14, "modelo":"Ferrari F100", "anoFab":1998, "velMax":400, "cantPue":2,"cantRue":4},{"id":51, "modelo":"Dodge Viper", "anoFab":1991, "velMax":266,"cantPue":2, "cantRue":4},{"id":67, "modelo":"Boeing CH-47 Chinook","anoFab":1962, "velMax":302, "altMax":6, "autonomia":1200},{"id":666,"modelo":"Aprilia RSV 1000 R", "anoFab":2004, "velMax":280, "cantPue":0,"cantRue":2},{"id":872, "modelo":"Boeing 747-400", "anoFab":1989, "velMax":988,"altMax":13, "autonomia":13450},{"id":742, "modelo":"Cessna CH-1 SkyhookR","anoFab":1953, "velMax":174, "altMax":3, "autonomia":870}]';
+        let aux = JSON.parse(cadenaDatos);
+        let array = new Array();
+        aux.forEach(element => {
+            if (element.hasOwnProperty('cantPue')) {
+                array.push(new Terrestre(element.id, element.modelo, element.anoFab, element.velMax, element.cantPue, element.cantRue));
+            } else {
+                array.push(new Aereo(element.id, element.modelo, element.anoFab, element.velMax, element.altMax, element.autonomia));
+            }
+        });
+        return array;
+    }
+
+    function seleccionVehiculos() {
+        let vehiculos = document.getElementById("vehiculos");
+        let retorno = vehiculos.options[vehiculos.selectedIndex].value;
+        console.log(retorno);
+        return retorno;
+    }
+
+    function filtrarVehiculos() {
+        let retorno = new Array();
+        let seleccion = seleccionVehiculos();
+        let array = LeerJSON();
+        switch (seleccion) {
+            case "Todos":
+                retorno = array;
+                break;
+            case "Terrestre":
+                array.forEach(element => {
+                    if (element.hasOwnProperty('cantidadPuertas')) {
+                        retorno.push(new Terrestre(element.id, element.modelo, element.añoFabricacion, element.velocidadMaxima, element.cantidadPuertas, element.cantidadRuedas));
+                    }
+                });
+                break;
+            case "Aereo":
+                array.forEach(element => {
+                    if (element.hasOwnProperty('alturaMaxima')) {
+                        retorno.push(new Aereo(element.id, element.modelo, element.añoFabricacion, element.velocidadMaxima, element.alturaMaxima, element.autonomia));
+                    }
+                });
+                break;
+        }
+        console.log(retorno);
+        construirTabla(retorno);
+    }
+
+    function calcularPromedio() {
+        let acumulador = 0;
+        let cantidad = 0;
+        let promedio = 0;
+        let seleccion = seleccionVehiculos();
+        let array = LeerJSON();
+        switch (seleccion) {
+            case "Todos":
+                array.forEach(element => {
+                    acumulador += element.velocidadMaxima;
+                    cantidad++;
+                });
+                break;
+            case "Terrestre":
+                array.forEach(element => {
+                    if (element.hasOwnProperty('cantidadPuertas')) {
+                        acumulador += element.velocidadMaxima;
+                        cantidad++;
+                    }
+                });
+                break;
+            case "Aereo":
+                array.forEach(element => {
+                    if (element.hasOwnProperty('alturaMaxima')) {
+                        acumulador += element.velocidadMaxima;
+                        cantidad++;
+                    }
+                });
+                break;
+        }
+        promedio = acumulador / cantidad;
+        console.log("Acumulador: " + acumulador + " Cantidad: " + cantidad + " Promedio: " + promedio);
+        (document.getElementById("promedio")).value = promedio;
+    }
+
+    function chequearColumnas() {
+        let retorno = { checkID: (document.getElementById("checkId")).checked, checkModelo: (document.getElementById("checkModelo")).checked, checkAño: (document.getElementById("checkAño")).checked, checkVelMax: (document.getElementById("checkVelMax")).checked, checkAltMax: (document.getElementById("checkAltMax")).checked, checkAuto: (document.getElementById("checkAuto")).checked, checkCantPuer: (document.getElementById("checkCantPuer")).checked, checkCantRue: (document.getElementById("checkCantRue")).checked }
+        console.log(retorno);
+        return retorno;
+    }
+
+
+
+    function construirTabla(array) {
+        let arraySeleccionado = new Array();
+        arraySeleccionado = array;
+        let body = "";
+        let tableBody = document.getElementById('tbody');
+        tableBody.innerHTML = "";
+        let head = '<tr style="border: 3px solid;">';
+        let tableHead = document.getElementById('thead');
+        tableHead.innerHTML = "";
+        let checks = new Array();
+        checks = chequearColumnas();
+
+        arraySeleccionado.forEach(element => {
+            head = '';
+            if (checks.checkID) {
+                head += '<td style="border: 3px solid; text-align: center;"><button>ID</button></td>';
+                body += '<tr><td style="border: 2px solid;">';
+                body += element.id + '</td>';
+            }
+            if (checks.checkModelo) {
+                head += '<td style="border: 3px solid; text-align: center;"><button>MODELO</button></td>';
+                body += '<td style="border: 2px solid;">';
+                body += element.modelo + '</td>';
+            }
+            if (checks.checkAño) {
+                head += '<td style="border: 3px solid; text-align: center;"><button>AÑO FAB</button></td>';
+                body += '<td style="border: 2px solid;">';
+                body += element.añoFabricacion + '</td>';
+            }
+            if (checks.checkVelMax) {
+                head += '<td style="border: 3px solid; text-align: center;"><button>VEL MAX</button></td>';
+                body += '<td style="border: 2px solid;">';
+                body += element.velocidadMaxima + '</td>';
+            }
+            if (checks.checkAltMax) {
+                head += '<td style="border: 3px solid; text-align: center;"><button>ALT MAX</button></td>';
+                if (element.hasOwnProperty('cantidadPuertas')) {
+                    body += '<td style="border: 2px solid;">N/A</td>';
+                }
+                else {
+                    body += '</td><td style="border: 2px solid;">';
+                    body += element.alturaMaxima + '</td>';
+                }
+            }
+            if (checks.checkAuto) {
+                head += '<td style="border: 3px solid; text-align: center;"><button>AUTONOMIA</button></td>';
+                if (element.hasOwnProperty('cantidadPuertas')) {
+                    body += '<td style="border: 2px solid;">N/A</td>';
+                }
+                else {
+                    body += '</td><td style="border: 2px solid;">';
+                    body += element.autonomia + '</td>';
+                }
+            }
+            if (checks.checkCantPuer) {
+                head += '<td style="border: 3px solid; text-align: center;"><button>CANT PUE</button></td>';
+                if (element.hasOwnProperty('cantidadPuertas')) {
+                    body += '</td><td style="border: 2px solid;">';
+                    body += element.cantidadPuertas + '</td>';
+                }
+                else {
+                    body += '<td style="border: 2px solid;">N/A</td>';
+                }
+            }
+            if (checks.checkCantRue) {
+                head += '<td style="border: 3px solid; text-align: center;"><button>CANT RUE</button></td>';
+                if (element.hasOwnProperty('cantidadPuertas')) {
+                    body += '</td><td style="border: 2px solid;">';
+                    body += element.cantidadRuedas + '</td>';
+                }
+                else {
+                    body += '<td style="border: 2px solid;">N/A</td>';
+                }
+            }
+            body += '</tr>';
+        });
+        console.log(head);
+        console.log(body);
+        tableHead.innerHTML += head;
+        tableBody.innerHTML += body;
+    }
+
+function cargarFormABM(){
+    let retorno="";
+
+}
+
+</script>
+
+<body onload="filtrarVehiculos()">
+    <table style="margin: 0 auto; background-color: aquamarine;">
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <h1>Form Datos</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Filtrar por: <select id="vehiculos" onchange="filtrarVehiculos()">
+                                <option value="Todos" selected>Todos</option>
+                                <option value="Terrestre">Terrestre</option>
+                                <option value="Aereo">Aereo</option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" checked id="checkId" onchange="filtrarVehiculos()">ID
+                            <input type="checkbox" checked id="checkModelo" onchange="filtrarVehiculos()">MODELO
+                            <input type="checkbox" checked id="checkAño" onchange="filtrarVehiculos()">AÑO FAB
+                            <input type="checkbox" checked id="checkVelMax" onchange="filtrarVehiculos()">VEL MAX
+                            <input type="checkbox" checked id="checkAltMax" onchange="filtrarVehiculos()">ALT MAX
+                            <input type="checkbox" checked id="checkAuto" onchange="filtrarVehiculos()">AUTONOMIA
+                            <input type="checkbox" checked id="checkCantPuer" onchange="filtrarVehiculos()">CANT PUE
+                            <input type="checkbox" checked id="checkCantRue" onchange="filtrarVehiculos()">CANT RUE
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Valor Promedio IDs: <input type="text" id="promedio" name="promedio" value="" disabled>
+                            <button onclick="calcularPromedio()">CALCULAR</button>
+                        </td>
+                    </tr>
+
+                </table>
+                <table style="border: 3px solid; margin: 0 auto;">
+                    <thead id="thead">
+                    </thead>
+                    <tbody id="tbody">
+                    </tbody>
+
+                </table>
+                <table style="text-align: right;">
+                    <tr>
+                        <button style="background-color:royalblue; border-style: double;" onclick="cargarFormABM()">AGREGAR</button>
+                    </tr>
+
+                    <tr><td></td><td><h2>Form ABM</h2></td></tr>
+                    <tr><td><label>ID: </label></td><td><input type="text" id="abmId"></td></tr>
+                    <tr><td><label>Modelo: </label></td><td><input type="text" id="abmModelo"></td></tr>
+                    <tr><td><label>Año Fabricaci&oacute;n: </label></td><td><input type="text" id="abmAño"></td></tr>
+                    <tr><td><label>Velocidad M&aacute;xima: </label></td><td><input type="text" id="abmVelMax"></td></tr>
+                    <tr><td><label>Tipo: </label></td><td><select id="abmTipo"><option value="Aereo">Aereo</option><option value="Terrestre">Terrestre</option></select></td></tr>
+                    <tr><td><label>Altura M&aacute;xima: </label></td><td><input type="text" id="abmAltMax"></td></tr>
+                    <tr><td><label>Autonomia: </label></td><td><input type="text" id="abmAuto"></td></tr>
+                    <tr><td><label>Cantidad Puertas: </label></td><td><input type="text" id="abmCantPuer"></td></tr>
+                    <tr><td><label>Cantidad Ruedas: </label></td><td><input type="text" id="abmId"></td></tr>
+                    <tr><td><button>Agregar</button></td><td><button>Modificar</button></td><td><button>Eliminar</button></td><td><button>Cancelar</button></td></tr>
+                    
+
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
