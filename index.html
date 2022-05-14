@@ -231,10 +231,55 @@
         tableBody.innerHTML += body;
     }
 
-function cargarFormABM(){
-    let retorno="";
+    function obtenerTipoABM() {
+        let tipos = document.getElementById("abmTipo");
+        let seleccion = tipos.options[tipos.selectedIndex].value;
+        console.log(seleccion);
+        return seleccion;
+    }
 
-}
+    function mostrarSegunTipo() {
+        let seleccion = obtenerTipoABM();
+        let tableBody = document.getElementById('tbodyABM');
+        tableBody.innerHTML = "";
+        let abm = "";
+        abm = '<tr style="text-align: center;"><td colspan="2"><h2>Form ABM</h2></td></tr>';
+        abm += '<tr><td><label>ID: </label></td><td><input type="text" id="abmId"></td></tr>';
+        abm += '<tr><td><label>Modelo: </label></td><td><input type="text" id="abmModelo"></td></tr>';
+        abm += '<tr><td><label>Año Fabricaci&oacute;n: </label></td><td><input type="text" id="abmAño"></td></tr>';
+        abm += '<tr><td><label>Velocidad M&aacute;xima: </label></td><td><input type="text" id="abmVelMax"></td></tr>';
+        abm += '<tr><td><label>Tipo: </label></td><td><select id="abmTipo" onchange="mostrarSegunTipo()"><option disabled selected>Seleccione una opci&oacuten</option><option value="Aereo">Aereo</option><option value="Terrestre">Terrestre</option></select></td></tr>';
+
+        switch (seleccion) {
+            case "Terrestre":
+                abm += '<tr><td><label>Cantidad Puertas: </label></td><td><input type="text" id="abmCantPuer"></td></tr>';
+                abm += '<tr><td><label>Cantidad Ruedas: </label></td><td><input type="text" id="abmId"></td></tr>';
+                break;
+            case "Aereo":
+                abm += '<tr><td><label>Altura M&aacute;xima: </label></td><td><input type="text" id="abmAltMax"></td></tr>';
+                abm += '<tr><td><label>Autonomia: </label></td><td><input type="text" id="abmAuto"></td></tr>';
+                break;
+        }
+        abm += '<tr><td colspan="2"><button>Agregar</button><button>Modificar</button><button>Eliminar</button><button>Cancelar</button></td></tr>';
+        seleccion = "";
+        console.log(abm);
+        tableBody.innerHTML += abm;
+    }
+
+    function cargarFormABM() {
+        let tableBody = document.getElementById('tbodyABM');
+        tableBody.innerHTML = "";
+        let abm = '<tr style="text-align: center;"><td colspan="2"><h2>Form ABM</h2></td></tr>';
+        abm += '<tr><td><label>ID: </label></td><td><input type="text" id="abmId"></td></tr>';
+        abm += '<tr><td><label>Modelo: </label></td><td><input type="text" id="abmModelo"></td></tr>';
+        abm += '<tr><td><label>Año Fabricaci&oacute;n: </label></td><td><input type="text" id="abmAño"></td></tr>';
+        abm += '<tr><td><label>Velocidad M&aacute;xima: </label></td><td><input type="text" id="abmVelMax"></td></tr>';
+        abm += '<tr><td><label>Tipo: </label></td><td><select id="abmTipo" onchange="mostrarSegunTipo()"><option disabled selected>Seleccione una opci&oacuten</option><option value="Aereo">Aereo</option><option value="Terrestre">Terrestre</option></select></td></tr>';
+        abm += '';
+        abm += '<tr><td colspan="2"><button>Agregar</button><button>Modificar</button><button>Eliminar</button><button>Cancelar</button></td></tr>';
+        console.log(abm);
+        tableBody.innerHTML += abm;
+    }
 
 </script>
 
@@ -280,23 +325,16 @@ function cargarFormABM(){
                     </tbody>
 
                 </table>
-                <table style="text-align: right;">
-                    <tr>
-                        <button style="background-color:royalblue; border-style: double;" onclick="cargarFormABM()">AGREGAR</button>
+                <table style="text-align: right; margin: 0 auto;">
+                    <tr style="text-align: center;">
+                        <td colspan="4">
+                            <button style="background-color:royalblue; border-style: double;"
+                                onclick="cargarFormABM()">AGREGAR</button>
+                        </td>
                     </tr>
+                    <tbody id="tbodyABM"></tbody>
 
-                    <tr><td></td><td><h2>Form ABM</h2></td></tr>
-                    <tr><td><label>ID: </label></td><td><input type="text" id="abmId"></td></tr>
-                    <tr><td><label>Modelo: </label></td><td><input type="text" id="abmModelo"></td></tr>
-                    <tr><td><label>Año Fabricaci&oacute;n: </label></td><td><input type="text" id="abmAño"></td></tr>
-                    <tr><td><label>Velocidad M&aacute;xima: </label></td><td><input type="text" id="abmVelMax"></td></tr>
-                    <tr><td><label>Tipo: </label></td><td><select id="abmTipo"><option value="Aereo">Aereo</option><option value="Terrestre">Terrestre</option></select></td></tr>
-                    <tr><td><label>Altura M&aacute;xima: </label></td><td><input type="text" id="abmAltMax"></td></tr>
-                    <tr><td><label>Autonomia: </label></td><td><input type="text" id="abmAuto"></td></tr>
-                    <tr><td><label>Cantidad Puertas: </label></td><td><input type="text" id="abmCantPuer"></td></tr>
-                    <tr><td><label>Cantidad Ruedas: </label></td><td><input type="text" id="abmId"></td></tr>
-                    <tr><td><button>Agregar</button></td><td><button>Modificar</button></td><td><button>Eliminar</button></td><td><button>Cancelar</button></td></tr>
-                    
+
 
 
                 </table>
