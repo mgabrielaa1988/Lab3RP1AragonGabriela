@@ -252,7 +252,7 @@
         switch (seleccion) {
             case "Terrestre":
                 abm += '<tr><td><label>Cantidad Puertas: </label></td><td><input type="text" id="abmCantPuer"></td></tr>';
-                abm += '<tr><td><label>Cantidad Ruedas: </label></td><td><input type="text" id="abmId"></td></tr>';
+                abm += '<tr><td><label>Cantidad Ruedas: </label></td><td><input type="text" id="abmCantRue"></td></tr>';
                 break;
             case "Aereo":
                 abm += '<tr><td><label>Altura M&aacute;xima: </label></td><td><input type="text" id="abmAltMax"></td></tr>';
@@ -274,10 +274,27 @@
         abm += '<tr><td><label>Año Fabricaci&oacute;n: </label></td><td><input type="text" id="abmAño"></td></tr>';
         abm += '<tr><td><label>Velocidad M&aacute;xima: </label></td><td><input type="text" id="abmVelMax"></td></tr>';
         abm += '<tr><td><label>Tipo: </label></td><td><select id="abmTipo" onchange="mostrarSegunTipo()"><option disabled selected>Seleccione una opci&oacuten</option><option value="Aereo">Aereo</option><option value="Terrestre">Terrestre</option></select></td></tr>';
-        abm += '';
         abm += '<tr><td colspan="2"><button>Agregar</button><button>Modificar</button><button>Eliminar</button><button>Cancelar</button></td></tr>';
         console.log(abm);
         tableBody.innerHTML += abm;
+    }
+
+    function modificarRegistro(element){
+        mostrarSegunTipo();
+        document.getElementById("abmId").value=element.id;
+        document.getElementById("abmModelo").value=element.modelo;
+        document.getElementById("abmAño").value=element.añoFabricacion;
+        document.getElementById("abmVelMax").value=element.velocidadMaxima;
+        if(element.alturaMaxima!=null){
+            document.forms.abmTipo.value[Aereo].selected=true;
+            document.getElementById("abmAltMax").value=element.alturaMaxima;
+            document.getElementById("abmauto").value=element.autonomia;
+        }
+        if(element.cantidadPuertas!=null){
+            document.getElementById("abmTipo").value;
+            document.getElementById("abmCantPuer").value=element.alturaMaxima;
+            document.getElementById("abmCantRue").value=element.autonomia;
+        }
     }
 
 </script>
